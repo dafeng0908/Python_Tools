@@ -48,3 +48,16 @@ Signature TLV
 - 修正 Manifest Header 格式欄位數。
 - Header 固定大小為 120 bytes。
 - 已完成 pack/unpack round-trip 與 TLV 測試。
+
+## V4 ECDSA extension
+
+GUI/CLI now supports two signature families:
+
+- ML-DSA-44 / 65 / 87 (post-quantum)
+- ECDSA-P256-SHA256 (classical ECC)
+
+`ECDSA-P256-SHA256` uses the NIST P-256 curve and SHA-256. The signature is stored in the V4 manifest as fixed-width **64-byte raw `r || s`**, rather than ASN.1 DER. This keeps the MCU manifest signature size deterministic.
+
+MCU verification for ECDSA should hash the signed manifest bytes with SHA-256, validate the trusted P-256 public key, split the 64-byte signature into 32-byte `r` and 32-byte `s`, and call the MCU P-256 ECDSA verify primitive.
+
+ECDSA is a digital signature, not firmware encryption. Firmware confidentiality requires a separate encryption scheme such as AES-GCM with protected device keys.
