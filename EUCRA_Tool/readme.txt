@@ -1,1 +1,1 @@
-EUCRA PQC Tool
+EUCRA ECDSA/PQC Tool
